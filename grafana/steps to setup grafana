@@ -1,0 +1,33 @@
+1. Connect to grafana instance.
+    ssh -i "key-name" host-user@host-ip
+
+2. We need to update all installed packages.
+    sudo yum update -y
+
+3. Then we add a new YUM repository for the operating system to know where to download Grafana.
+    sudo vi /etc/yum.repos.d/grafana.repo
+
+ 4. Add the lines below to grafana.repo. This setting will install to the Open Source version of Grafana
+    vi grafana.repo
+    
+    [grafana] 
+    name=grafana 
+    baseurl=https://packages.grafana.com/oss/rpm 
+    repo_gpgcheck=1 
+    enabled=1 
+    gpgcheck=1 
+    gpgkey=https://packages.grafana.com/gpg.key 
+    sslverify=1 
+    sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+5. Install Grafana.
+    sudo yum install -y grafana
+
+ 6. Reload the systemd to load the new settings. Start the Grafana Server, then check for its status.
+    sudo systemctl daemon-reload
+    sudo systemctl start grafana-server
+    sudo systemctl enable grafana-server.service
+    sudo systemctl status grafana-server
+
+7. Visit the newly installed Grafana Server by visiting the Public IP of the EC2 Instance on port 3000.(http://public_ip:3000)
+Enter username and password:
