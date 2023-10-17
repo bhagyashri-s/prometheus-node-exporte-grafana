@@ -1,0 +1,48 @@
+How to Setup Node-Exporter
+---
+
+1. Connect to node-exporter instance.
+    ssh -i "key-name" host-user@host-ip
+
+2. We will download the Node Exporter on our machine.
+    wget https://github.com/prometheus/node_exporter/releases/download/v1.1.2/node_exporter-1.1.2.linux-amd64.tar.gz
+
+3. Extract the downloaded archive.
+     tar -xvf node_exporter-1.1.2.linux-amd64.tar.gz
+
+4. Move the node_exporter binary to /usr/local/bin :
+    mv node_exporter-1.1.2.linux-amd64/node_exporter /usr/local/bin/
+
+5. Remove the residual files with
+    rm -rf node_exporter-1.1.2.linux-amd64/*
+
+
+6. Next, we will create users and service files for node_exporter.
+
+7. We will create users and service files for node_exporter.
+    sudo useradd -rs /bin/false node_exporter
+
+8. Then, we will create a systemd unit file so that node_exporter can be started at boot.
+    vi /etc/systemd/system/node_exporter.service
+
+      [Unit]
+      Description=Node Exporter
+      After=network.target
+      [Service]
+      User=node_exporter
+      Group=node_exporter
+      Type=simple
+      ExecStart=/usr/local/bin/node_exporter
+      [Install]
+      WantedBy=multi-user.target
+    
+
+9. Since we have created a new unit file, we must reload the systemd daemon, set the service to always run at boot, and start it :
+    1.sudo systemctl daemon-reload s
+    2.sudo systemctl enable node_exporter
+    3.sudo systemctl start node_exporter
+    4.sudo systemctl status node_expor
+
+10. Validate Node Exporter Application: http://public_ip:9100/metrics
+
+---
